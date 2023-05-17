@@ -10,17 +10,31 @@ for filename in os.listdir(path):
     tree = ET.parse(fullname)
     root = tree.getroot()
 
+    bookCounter = 1
     bible = []
 
     for book in root:
-        book_data = {
-            "number": book.attrib['bnumber'],
-            "name": book.attrib['bname'],
-            "chapters": []
-        }
+        if 'bnumber' in book.attrib:
+            book_data = {
+                "number": book.attrib['bnumber'],
+                "name": book.attrib['bname'],
+                "chapters": []
+            }
+        elif 'n' in book.attrib:
+            book_data = {
+                "number": bookCounter,
+                "name": book.attrib['n'],
+                "chapters": []
+            }
+
+            bookCounter += 1
         for chapter in book:
-            chapter_number = chapter.attrib['cnumber']
             verses = []
+            if 'cnumber' in chapter.attrib:
+                chapter_number = chapter.attrib['cnumber']
+            elif 'n' in chapter.attrib:
+                chapter_number = chapter.attrib['n']
+                
             for verse in chapter:
                 verses.append(verse.text.strip())
 
